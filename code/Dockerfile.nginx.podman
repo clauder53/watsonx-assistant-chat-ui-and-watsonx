@@ -1,0 +1,35 @@
+##############################
+#           PRODUCTION
+##############################
+FROM nginx:1.27-alpine-perl
+
+RUN apk update \
+    apk upgrade \
+    apk add --update coreutils
+
+RUN addgroup -g 1500 nginxusers 
+RUN adduser --disabled-password -u 1501 nginxuser nginxusers 
+
+COPY ./nginx-os4-webapp.conf /etc/nginx/nginx.conf
+COPY ./docker_entrypoint.sh .
+RUN mkdir src
+
+WORKDIR /src
+COPY ./generate_index_html.sh .
+
+WORKDIR /
+
+RUN chown nginxuser:nginxusers /docker_entrypoint.sh
+RUN chown nginxuser:nginxusers /src/generate_index_html.sh
+RUN chmod 777 docker_entrypoint.sh /src/generate_index_html.sh
+RUN chown -R nginxuser:nginxusers /src
+RUN chown -R nginxuser:nginxusers /etc/nginx
+RUN chown -R nginxuser:nginxusers /tmp
+RUN chmod 777 /src
+RUN chmod 777 /tmp
+RUN chmod 777 /etc/nginx
+
+USER nginxuser
+
+EXPOSE 8080
+CMD ["/bin/sh","docker_entrypoint.sh"]

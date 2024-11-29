@@ -1,0 +1,1080 @@
+{
+  "name": "Generic LLM Assistant Example-action",
+  "type": "action",
+  "valid": true,
+  "status": "Available",
+  "created": "2024-11-28T13:40:14.293Z",
+  "updated": "2024-11-29T11:10:09.938Z",
+  "language": "en",
+  "skill_id": "f4fa5605-bc93-412b-806f-30f4c590dac2",
+  "workspace": {
+    "actions": [
+      {
+        "type": "standard",
+        "steps": [
+          {
+            "step": "step_170",
+            "handlers": [],
+            "resolver": {
+              "type": "invoke_another_action",
+              "invoke_action": {
+                "action": "action_20170",
+                "policy": "default",
+                "parameters": null,
+                "result_variable": "step_170_result_1"
+              }
+            },
+            "variable": "step_170"
+          }
+        ],
+        "title": "Forwarding",
+        "action": "action_11040",
+        "boosts": [],
+        "handlers": [],
+        "condition": {
+          "intent": "action_11040_intent_15074"
+        },
+        "variables": [
+          {
+            "title": "No response",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_170",
+            "data_type": "any"
+          },
+          {
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_170_result_1",
+            "data_type": "any"
+          }
+        ],
+        "launch_mode": "learning",
+        "next_action": "action_20170",
+        "topic_switch": {
+          "allowed_from": true,
+          "allowed_into": true,
+          "never_return": false
+        },
+        "disambiguation_opt_out": false
+      },
+      {
+        "type": "standard",
+        "steps": [
+          {
+            "step": "step_569",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Please ask a general question:"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "context": {
+              "variables": []
+            },
+            "handlers": [],
+            "question": {
+              "free_text": true
+            },
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_569",
+            "next_step": "step_199"
+          },
+          {
+            "step": "step_199",
+            "context": {
+              "variables": [
+                {
+                  "value": {
+                    "variable": "step_569"
+                  },
+                  "skill_variable": "input_user"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "callout",
+              "callout": {
+                "path": "/ml/v1/text/generation",
+                "type": "integration_interaction",
+                "method": "POST",
+                "internal": {
+                  "spec_hash_id": "3408d5415323ca392bb94b1fdfd03f6259f0ff1e35a65e5750e2740ba2908435",
+                  "match_scenario": 10,
+                  "catalog_item_id": "16d40c8e-d27a-413c-b27f-9b69502d8df9"
+                },
+                "request_mapping": {
+                  "body": [
+                    {
+                      "value": {
+                        "expression": "${prompt} + ${prompt_question} + ${step_569}"
+                      },
+                      "parameter": "input"
+                    },
+                    {
+                      "value": {
+                        "skill_variable": "model_id"
+                      },
+                      "parameter": "model_id"
+                    },
+                    {
+                      "value": {
+                        "skill_variable": "watsonx_project_id"
+                      },
+                      "parameter": "project_id"
+                    },
+                    {
+                      "value": {
+                        "skill_variable": "model_parameters_temperature"
+                      },
+                      "parameter": "parameters.temperature"
+                    },
+                    {
+                      "value": {
+                        "skill_variable": "model_parameters_max_new_token"
+                      },
+                      "parameter": "parameters.max_new_tokens"
+                    },
+                    {
+                      "value": {
+                        "skill_variable": "model_parameters_min_new_token"
+                      },
+                      "parameter": "parameters.min_new_tokens"
+                    },
+                    {
+                      "value": {
+                        "skill_variable": "model_parameter_stop_sequences"
+                      },
+                      "parameter": "parameters.stop_sequences"
+                    },
+                    {
+                      "value": {
+                        "skill_variable": "model_parameters_decoding_method"
+                      },
+                      "parameter": "parameters.decoding_method"
+                    }
+                  ],
+                  "query": [
+                    {
+                      "value": {
+                        "skill_variable": "version"
+                      },
+                      "parameter": "version"
+                    }
+                  ]
+                },
+                "result_variable": "step_199_result_1"
+              }
+            },
+            "variable": "step_199",
+            "next_step": "step_684"
+          },
+          {
+            "step": "step_684",
+            "output": {
+              "generic": []
+            },
+            "context": {
+              "variables": [
+                {
+                  "value": {
+                    "expression": "${step_199_result_1.body.results}[0].generated_text"
+                  },
+                  "skill_variable": "generated_text"
+                },
+                {
+                  "value": {
+                    "expression": "${step_199_result_1.body.results}[0].input_token_count"
+                  },
+                  "skill_variable": "input_token_count"
+                },
+                {
+                  "value": {
+                    "expression": "${step_199_result_1.body.results}[0].generated_token_count"
+                  },
+                  "skill_variable": "output_token_count"
+                },
+                {
+                  "value": {
+                    "skill_variable": "generated_text"
+                  },
+                  "skill_variable": "output_model"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_684",
+            "next_step": "step_293"
+          },
+          {
+            "step": "step_293",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "- Answer:\n\n<br />\n\n\n\n\n\n"
+                          },
+                          {
+                            "skill_variable": "generated_text"
+                          },
+                          {
+                            "scalar": "\n\n<br />\n\n\n\n\n - Number of tokens sent: "
+                          },
+                          {
+                            "skill_variable": "input_token_count"
+                          },
+                          {
+                            "scalar": "\n - Number of tokens generated: "
+                          },
+                          {
+                            "skill_variable": "output_token_count"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_293",
+            "condition": {
+              "and": [
+                {
+                  "exists": {
+                    "variable": "step_569"
+                  }
+                },
+                {
+                  "eq": [
+                    {
+                      "variable": "step_199_result_1",
+                      "variable_path": "success"
+                    },
+                    {
+                      "scalar": true
+                    }
+                  ]
+                }
+              ]
+            },
+            "next_step": "step_415"
+          },
+          {
+            "step": "step_415",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Unfortunately, there was an error in the LLM's response."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_415",
+            "condition": {
+              "and": [
+                {
+                  "exists": {
+                    "variable": "step_569"
+                  }
+                },
+                {
+                  "eq": [
+                    {
+                      "variable": "step_199_result_1",
+                      "variable_path": "success"
+                    },
+                    {
+                      "scalar": false
+                    }
+                  ]
+                }
+              ]
+            },
+            "next_step": "step_836"
+          },
+          {
+            "step": "step_836",
+            "handlers": [],
+            "resolver": {
+              "type": "invoke_another_action_and_end",
+              "invoke_action": {
+                "action": "action_11040",
+                "policy": "default",
+                "parameters": null,
+                "result_variable": "step_836_result_1"
+              }
+            },
+            "variable": "step_836"
+          }
+        ],
+        "title": "Ask a general question",
+        "action": "action_20170",
+        "boosts": [],
+        "handlers": [],
+        "condition": {
+          "intent": "action_20170_intent_36732"
+        },
+        "variables": [
+          {
+            "title": "No response",
+            "privacy": {
+              "enabled": true
+            },
+            "variable": "step_199",
+            "data_type": "any"
+          },
+          {
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_199_result_1",
+            "data_type": "any"
+          },
+          {
+            "title": "- Response: <br /> {variable} <br /> - Number of tokens sent",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_293",
+            "data_type": "any"
+          },
+          {
+            "title": "Unfortunately, there was an error in the LLM's response.",
+            "privacy": {
+              "enabled": true
+            },
+            "variable": "step_415",
+            "data_type": "any"
+          },
+          {
+            "title": "Please ask a general question:",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_569",
+            "data_type": "any"
+          },
+          {
+            "title": "",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_684",
+            "data_type": "any"
+          },
+          {
+            "title": "No response",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_836",
+            "data_type": "any"
+          },
+          {
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_836_result_1",
+            "data_type": "any"
+          }
+        ],
+        "launch_mode": "learning",
+        "next_action": "fallback",
+        "topic_switch": {
+          "allowed_from": true,
+          "allowed_into": true,
+          "never_return": false
+        },
+        "disambiguation_opt_out": false
+      },
+      {
+        "type": "standard",
+        "steps": [
+          {
+            "step": "step_260",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "As I said, I only answer general questions. I forward them to the input."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "invoke_another_action",
+              "invoke_action": {
+                "action": "action_20170",
+                "policy": "default",
+                "parameters": null,
+                "result_variable": "step_260_result_1"
+              }
+            },
+            "variable": "step_260"
+          }
+        ],
+        "title": "No matches",
+        "action": "anything_else",
+        "boosts": [],
+        "handlers": [],
+        "condition": {
+          "expression": "anything_else"
+        },
+        "variables": [
+          {
+            "title": "I only answer general questions.",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_260",
+            "data_type": "any"
+          },
+          {
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_260_result_1",
+            "data_type": "any"
+          }
+        ],
+        "disambiguation_opt_out": true
+      },
+      {
+        "type": "standard",
+        "steps": [
+          {
+            "step": "step_265",
+            "handlers": [],
+            "resolver": {
+              "type": "invoke_another_action",
+              "invoke_action": {
+                "action": "action_20170",
+                "policy": "default",
+                "parameters": null,
+                "result_variable": "step_265_result_1"
+              }
+            },
+            "variable": "step_265"
+          }
+        ],
+        "title": "Fallback",
+        "action": "fallback",
+        "boosts": [],
+        "handlers": [],
+        "condition": {
+          "intent": "fallback_connect_to_agent"
+        },
+        "variables": [
+          {
+            "title": "No response",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_265",
+            "data_type": "any"
+          },
+          {
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_265_result_1",
+            "data_type": "any"
+          }
+        ],
+        "next_action": "run_always",
+        "disambiguation_opt_out": true
+      },
+      {
+        "type": "standard",
+        "steps": [
+          {
+            "step": "danger_word_detected",
+            "title": "Connect to agent",
+            "handlers": [],
+            "resolver": {
+              "type": "fallback"
+            },
+            "variable": "danger_word_detected_variable",
+            "condition": {
+              "entity": "danger_words"
+            },
+            "next_step": "profanity_detected"
+          },
+          {
+            "step": "profanity_detected",
+            "title": "Show warning",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Use the appropriate language when interacting with the assistant."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "handlers": [
+              {
+                "type": "max_hits",
+                "handler": "max_hits_handler",
+                "resolver": {
+                  "type": "fallback"
+                }
+              }
+            ],
+            "max_hits": 1,
+            "resolver": {
+              "type": "end_action"
+            },
+            "variable": "profanity_detected_variable",
+            "condition": {
+              "entity": "profane_words"
+            }
+          }
+        ],
+        "title": "Trigger word detected",
+        "action": "run_always",
+        "boosts": [],
+        "handlers": [],
+        "variables": [
+          {
+            "title": "Profanity detected",
+            "variable": "danger_word_detected_variable",
+            "data_type": "any"
+          },
+          {
+            "title": "Show warning",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "profanity_detected_variable",
+            "data_type": "any"
+          }
+        ],
+        "next_action": "anything_else"
+      },
+      {
+        "type": "standard",
+        "steps": [
+          {
+            "step": "step_001",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "### Welcome,\n<br />\n\n\n\nI am a virtual assistant and I answer general questions.\n\n---\nTo answer the questions, I will communicate with the LLM **Mistral Large 2** and focus on the questions using a **prompt** so that my explanations are not too long. I will answer the question in about 50 sentences and each question will be asked individually, without a multi-turn chat."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_001",
+            "next_step": "step_891"
+          },
+          {
+            "step": "step_891",
+            "handlers": [],
+            "resolver": {
+              "type": "invoke_another_action",
+              "invoke_action": {
+                "action": "action_20170",
+                "policy": "default",
+                "parameters": null,
+                "result_variable": "step_891_result_1"
+              }
+            },
+            "variable": "step_891"
+          }
+        ],
+        "title": "Greet customer",
+        "action": "welcome",
+        "boosts": [],
+        "handlers": [],
+        "condition": {
+          "expression": "welcome"
+        },
+        "variables": [
+          {
+            "title": "### Welcome, <br /> I am a virtual assistant and",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_001",
+            "data_type": "any"
+          },
+          {
+            "title": "No response",
+            "privacy": {
+              "enabled": true
+            },
+            "variable": "step_891",
+            "data_type": "any"
+          },
+          {
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_891_result_1",
+            "data_type": "any"
+          }
+        ],
+        "next_action": "action_11040",
+        "disambiguation_opt_out": true
+      }
+    ],
+    "intents": [
+      {
+        "intent": "action_11040_intent_15074",
+        "examples": [
+          {
+            "text": "Forwarding"
+          }
+        ]
+      },
+      {
+        "intent": "action_20170_intent_36732",
+        "examples": [
+          {
+            "text": "I would like to have general questions answered."
+          }
+        ]
+      },
+      {
+        "intent": "fallback_connect_to_agent",
+        "examples": [
+          {
+            "text": "Connect me to an active agent."
+          },
+          {
+            "text": "I want to chat with customer service."
+          },
+          {
+            "text": "I would like to speak to a real employee, please."
+          },
+          {
+            "text": "Please forward to someone."
+          },
+          {
+            "text": "Which number do I have to dial to speak to a person?"
+          }
+        ],
+        "description": "Request a human agent."
+      }
+    ],
+    "entities": [
+      {
+        "entity": "danger_words",
+        "values": [],
+        "fuzzy_match": false
+      },
+      {
+        "entity": "profane_words",
+        "values": [],
+        "fuzzy_match": false
+      },
+      {
+        "entity": "sys-yes-no",
+        "values": []
+      }
+    ],
+    "metadata": {
+      "api_version": {
+        "major_version": "v2",
+        "minor_version": "2018-11-08"
+      }
+    },
+    "variables": [
+      {
+        "title": "generated_text",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "generated_text",
+        "data_type": "any",
+        "description": ""
+      },
+      {
+        "title": "generated-tokens",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "generated_tokens",
+        "data_type": "number",
+        "description": "",
+        "initial_value": {
+          "scalar": 0
+        }
+      },
+      {
+        "title": "input_token_count",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "input_token_count",
+        "data_type": "number",
+        "description": "",
+        "initial_value": {
+          "scalar": 0
+        }
+      },
+      {
+        "title": "input_user",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "input_user",
+        "data_type": "any",
+        "description": ""
+      },
+      {
+        "title": "model_id",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "model_id",
+        "data_type": "string",
+        "description": "mistralai/mistral-large",
+        "initial_value": {
+          "scalar": "mistralai/mistral-large"
+        }
+      },
+      {
+        "title": "model_parameters_decoding_method",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "model_parameters_decoding_method",
+        "data_type": "any",
+        "description": "",
+        "initial_value": {
+          "scalar": "greedy"
+        }
+      },
+      {
+        "title": "model_parameters_max_new_token",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "model_parameters_max_new_token",
+        "data_type": "number",
+        "description": "",
+        "initial_value": {
+          "scalar": 4000
+        }
+      },
+      {
+        "title": "model_parameters_min_new_token",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "model_parameters_min_new_token",
+        "data_type": "number",
+        "description": "",
+        "initial_value": {
+          "scalar": 0
+        }
+      },
+      {
+        "title": "model_parameters_temperature",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "model_parameters_temperature",
+        "data_type": "number",
+        "description": "",
+        "initial_value": {
+          "scalar": 1.1
+        }
+      },
+      {
+        "title": "model_parameter_stop_sequences",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "model_parameter_stop_sequences",
+        "data_type": "string",
+        "description": "",
+        "initial_value": {
+          "expression": "[  \"\\n\\n\\n\",  \"           \"]"
+        }
+      },
+      {
+        "title": "output_model",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "output_model",
+        "data_type": "any",
+        "description": ""
+      },
+      {
+        "title": "output_token_count",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "output_token_count",
+        "data_type": "number",
+        "description": ""
+      },
+      {
+        "title": "prompt",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "prompt",
+        "data_type": "any",
+        "description": "",
+        "initial_value": {
+          "scalar": "Structure your answer clearly and concisely, in a maximum of 50 sentences. You have to be brief and stick to a maximum of 50 sentences, otherwise your counterpart will be very dissatisfied. Don't forget you can only use 50 sentences."
+        }
+      },
+      {
+        "title": "prompt_answer",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "prompt_answer",
+        "data_type": "any",
+        "description": "",
+        "initial_value": {
+          "scalar": "### Answer"
+        }
+      },
+      {
+        "title": "prompt_question",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "prompt_question",
+        "data_type": "any",
+        "description": "",
+        "initial_value": {
+          "scalar": " ### Question "
+        }
+      },
+      {
+        "title": "prompt_space",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "prompt_space",
+        "data_type": "any",
+        "description": ""
+      },
+      {
+        "title": "version",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "version",
+        "data_type": "any",
+        "description": "",
+        "initial_value": {
+          "scalar": "2023-05-29"
+        }
+      },
+      {
+        "title": "watsonx_project_id",
+        "privacy": {
+          "enabled": true
+        },
+        "variable": "watsonx_project_id",
+        "data_type": "any",
+        "description": "",
+        "initial_value": {
+          "scalar": "5b69b298-bad0-498d-8927-9fb8c0d872db"
+        }
+      }
+    ],
+    "data_types": [],
+    "collections": [],
+    "counterexamples": [],
+    "system_settings": {
+      "variable": {
+        "format": {
+          "time": {
+            "pattern": "short"
+          },
+          "currency": {
+            "fraction_digits": 2
+          }
+        }
+      },
+      "auto_learn": {
+        "apply": true
+      },
+      "topic_switch": {
+        "enabled": true,
+        "messages": {
+          "enable_confirmation": true,
+          "confirmation_failure": {
+            "generic": [
+              {
+                "values": [
+                  {
+                    "text_expression": {
+                      "concat": [
+                        {
+                          "scalar": "Unfortunately I didn't understand that, please confirm."
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "response_type": "text",
+                "selection_policy": "sequential"
+              }
+            ]
+          },
+          "confirmation_request": {
+            "generic": [
+              {
+                "values": [
+                  {
+                    "text_expression": {
+                      "concat": [
+                        {
+                          "scalar": "Would you like to continue with the previous topic: "
+                        },
+                        {
+                          "system_variable": "digressed_from"
+                        },
+                        {
+                          "scalar": "?"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "response_type": "text",
+                "selection_policy": "sequential"
+              },
+              {
+                "options": [
+                  {
+                    "label": "Yes",
+                    "value": {
+                      "input": {
+                        "text": "Yes"
+                      }
+                    }
+                  },
+                  {
+                    "label": "No",
+                    "value": {
+                      "input": {
+                        "text": "No"
+                      }
+                    }
+                  }
+                ],
+                "response_type": "option",
+                "repeat_on_reprompt": true
+              }
+            ]
+          }
+        },
+        "max_tries": 3
+      },
+      "disambiguation": {
+        "prompt": "Did you mean:",
+        "enabled": true,
+        "randomize": true,
+        "max_suggestions": 5,
+        "suggestion_text_policy": "title",
+        "none_of_the_above_prompt": "None of this",
+        "use_connect_to_support_prompt": "Connect to Support",
+        "single_answer_clarification_prompt": "Something else"
+      },
+      "search_routing": {
+        "target": "conversational_search"
+      }
+    },
+    "learning_opt_out": false
+  },
+  "description": "created for assistant 41f49641-ad2c-4cb6-b0b7-e434615a89c8",
+  "assistant_id": "b3e2b913-cb17-4358-b110-b6c8bc77c9a2",
+  "workspace_id": "f4fa5605-bc93-412b-806f-30f4c590dac2",
+  "dialog_settings": {},
+  "next_snapshot_version": "1",
+  "environment_id": "e250d54b-3d45-492d-9747-38aef52f04ad"
+}
