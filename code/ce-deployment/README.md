@@ -59,8 +59,9 @@ _Note:_ You must have access rights to the `resource group`, `region`, `code eng
 ```sh
 # IBM Cloud
 export IBM_CLOUD_RESOURCE_GROUP=default
-export IBM_CLOUD_REGION="eu-de"
-export IBM_CLOUD_API_KEY=YOUR_IBM_CLOUD_API_KEY
+export IBM_CLOUD_REGION="us-south"
+#json(5)
+export IBM_CLOUD_API_KEY=""          YOUR_IBM_CLOUD_API_KEY
 
 # Code Engine
 export CODEENGINE_PROJECT_NAME=assistant-llm-integration-project
